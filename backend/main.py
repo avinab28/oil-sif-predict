@@ -3,6 +3,17 @@ FastAPI Server Entry Point for OIL SIF-PREDICT
 Exposes clean REST APIs for single analysis, batch analysis, datasets, dashboards, and research evaluation.
 Serves production frontend build when available.
 """
+import os
+import sys
+
+# Ensure root directory is always on python path regardless of where command is run
+CURRENT_FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CURRENT_FILE_DIR)
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+if CURRENT_FILE_DIR not in sys.path:
+    sys.path.insert(0, CURRENT_FILE_DIR)
+
 
 from fastapi import FastAPI, UploadFile, File, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware

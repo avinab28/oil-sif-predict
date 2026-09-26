@@ -4,6 +4,7 @@ import { Footer } from './components/Footer';
 import { AlertBanner } from './components/AlertBanner';
 import { ExecutiveReportModal } from './components/ExecutiveReportModal';
 import { HomePage } from './pages/HomePage';
+import { SolutionPage } from './pages/SolutionPage';
 import { AnalysisPage } from './pages/AnalysisPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { DatasetPage } from './pages/DatasetPage';
@@ -12,7 +13,7 @@ import { checkBackendHealth, getDashboardData } from './services/api';
 import { DashboardMetrics } from './types';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [activeTab, setActiveTab] = useState<string>('solution');
   const [demoMode, setDemoMode] = useState<boolean>(true);
   const [reportModalOpen, setReportModalOpen] = useState<boolean>(false);
   const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
@@ -46,6 +47,12 @@ export const App: React.FC = () => {
 
       {/* Main Body */}
       <main className="flex-1 pt-6">
+        {activeTab === 'solution' && (
+          <SolutionPage
+            onNavigateToEngine={() => setActiveTab('engine')}
+            onSelectSample={handleSelectSampleAndNavigate}
+          />
+        )}
         {activeTab === 'overview' && (
           <HomePage
             onNavigate={(tab) => setActiveTab(tab)}

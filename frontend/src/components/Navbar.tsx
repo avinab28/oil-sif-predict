@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, Activity, Database, FileText, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
+import { ShieldAlert, Activity, Database, FileText, BookOpen, Layers, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
@@ -19,6 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isBackendConnected
 }) => {
   const navItems = [
+    { id: 'solution', label: 'The Solution', icon: Sparkles, highlight: true },
     { id: 'overview', label: 'Pipeline & Overview', icon: Layers },
     { id: 'engine', label: 'AI/NLP Engine', icon: ShieldAlert },
     { id: 'dashboard', label: 'Safety Analytics', icon: Activity },
@@ -34,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
           <span className="font-medium text-white">Smart India Hackathon Prototype</span>
           <span className="text-slate-400">|</span>
-          <span className="text-slate-300 hidden sm:inline">Research Initiative for Oil India Limited (OIL)</span>
+          <span className="text-slate-300 hidden sm:inline">Research Solution for Oil India Limited (OIL)</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1.5">
@@ -59,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex justify-between items-center h-16">
           {/* Logo & Brand */}
           <div 
-            onClick={() => setActiveTab('overview')} 
+            onClick={() => setActiveTab('solution')} 
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-amber-600 via-orange-600 to-amber-500 flex items-center justify-center text-white shadow-sm ring-1 ring-amber-600/20 group-hover:scale-105 transition-transform">
@@ -89,13 +90,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                     isActive
                       ? 'bg-slate-900 text-white shadow-sm'
+                      : item.highlight
+                      ? 'text-amber-800 bg-amber-50/80 hover:bg-amber-100 border border-amber-200/80'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400' : (item.highlight ? 'text-amber-600' : 'text-slate-400')}`} />
                   {item.label}
                 </button>
               );

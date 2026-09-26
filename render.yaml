@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: oil-sif-predict
+    env: python
+    buildCommand: pip install -r backend/requirements.txt && cd frontend && npm install && npm run build && cd ..
+    startCommand: python backend/main.py
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHONUNBUFFERED
+        value: 1

@@ -1,13 +1,13 @@
 # OIL SIF-PREDICT: AI/NLP Engine for Detecting Serious Injury & Fatality Precursors
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688.svg)](https://fastapi.tiangolo.com/)
 [![React 18](https://img.shields.io/badge/React-18-61DAFB.svg)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC.svg)](https://tailwindcss.com/)
 [![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
 
-> **Research Prototype for Oil India Limited (OIL)**  
+> **Industrial Research Prototype for Oil India Limited (OIL)**  
 > Developed for the Smart India Hackathon (SIH) Research Problem Statement:  
 > *"AI/NLP Engine to Detect Serious Injury & Fatality (SIF) Precursors in OIL's Unsafe-Act / Unsafe-Condition and Near-Miss Reports."*
 
@@ -17,17 +17,16 @@
 
 > ### **Actual Consequence != Potential Consequence**
 >
-> In oil and gas operations, whether a high-energy event causes zero injuries or multiple fatalities is often determined by fortune, millimeters of clearance, or a split-second movement rather than systemic safety controls.
+> In high-hazard oil and gas upstream operations, whether an energy release causes zero injuries or multiple fatalities is often dictated by chance, millimeter clearance, or split-second movement rather than systemic controls.
 
 ### Real-World Oilfield Illustration:
 ```
-Incident Narrative:
-"A 500 kg drill collar fell from a height of 3 meters and landed in an empty walkway. No one was injured."
+Narrative: "A 500 kg drill collar fell from a height of 3 meters and landed in an empty walkway. No one was injured."
 
 Traditional Lagging System:
 ├── Consequence: No Injury
 ├── Severity Score: Minor / Low
-└── Outcome: Closed locally without management intervention.
+└── Outcome: Closed locally without leadership intervention.
 
 OIL SIF-PREDICT Leading System:
 ├── High-Energy Hazard: Suspended 500 kg mass (gravitational potential)
@@ -40,97 +39,80 @@ OIL SIF-PREDICT Leading System:
 
 ---
 
-## 2. Research & AI/NLP Pipeline Architecture
+## 2. The 7-Stage End-to-End Operational Safety Lifecycle
 
-The platform operationalizes an 8-layer hybrid intelligence pipeline combining Machine Learning with causal domain safety reasoning:
+OIL SIF-PREDICT moves beyond reactive report categorization into a continuous, enterprise-wide safety intelligence loop across 7 operational stages:
 
 ```
-[ Unstructured Safety Report (UA / UC / Near-Miss) ]
-                        │
-                        ▼
-       [ Stage 1: Text Preprocessing & Normalization ]
-           (Expands acronyms: LOTO, PTW, SWL, BOP, H2S)
-                        │
-                        ▼
-    [ Stage 2: Safety Entity & Physical Hazard Extraction ]
-           (Mass, pressure, voltage, toxic atmosphere)
-                        │
-                        ▼
-      [ Stage 3: High-Energy Hazard Detection & Thresholds ]
-           (Gravitational, kinetic, stored pressure, electrical)
-                        │
-                        ▼
-       [ Stage 4: Critical Safety Barrier Analysis Engine ]
-           (Physical barriers, LOTO, gas testing, fall arrest)
-                        │
-                        ▼
-        [ Stage 5: Hybrid SIF Potential Classification ]
-           (Fuses ML Classifier with Domain Safety Logic)
-                        │
-                        ▼
-      [ Stage 6: IOGP 9+1 Life-Saving Rule Mapping ]
-           (Line of Fire, Mechanical Lifting, Confined Space, etc.)
-                        │
-                        ▼
-      [ Stage 7: Explainable AI (XAI) Attribution ]
-           (Token-level span highlighting + evidence checklist)
-                        │
-                        ▼
-   [ Stage 8: Safety Intelligence & SIF Precursor Hotspots ]
+  BEFORE WORK              DURING WORK               AFTER OBSERVATION
+ ┌──────────────┐         ┌──────────────┐          ┌─────────────────┐
+ │  Smart PTW   │   ───►  │ Voice+Vision │   ───►   │ SIF Intelligence│
+ └──────────────┘         └──────────────┘          └─────────────────┘
+        ▲                                                    │
+        │                                                    ▼
+  LEARNING                 HSE ACTION               ACROSS TIME & SITES
+ ┌──────────────┐         ┌──────────────┐          ┌─────────────────┐
+ │Safety Memory │   ◄───  │ Prioritized  │   ◄───   │Converging Radar │
+ │& AI RootCause│         │ Intervention │          │& Knowledge Graph│
+ └──────────────┘         └──────────────┘          └─────────────────┘
 ```
 
----
+### Stage 1: BEFORE WORK — Smart PTW & SIMOPS Collision Matrix
+* **Smart PTW & Dynamic Checklist**: Converts static safety rules into pre-job actionable barrier checks. Flags missing Lockout/Tagout (LOTO), continuous LEL gas testing, or flame-retardant habitats.
+* **Spatial SIMOPS Matrix**: Detects simultaneous operational clashes (e.g., Hot Work welding within 12 meters of active condensate sampling) and mandates spatial buffer enforcement.
 
-## 3. High Recall Prioritization
+### Stage 2: DURING WORK — Multilingual Voice & Computer Vision
+* **Vernacular Spoken Safety Logger**: Enables frontline crews to dictate observations in Hinglish, Hindi, and Assamese. Auto-extracts structured activity, hazard, barrier status, and generates dynamic follow-up questions.
+* **CCTV Vision Correlator**: Cross-verifies active CCTV rig feeds against issued permits to catch PPE non-compliance or missing gas detectors in real time.
 
-In industrial safety analytics, **Recall is prioritized over raw precision**:
-Recall = True Positives / (True Positives + False Negatives)
+### Stage 3: AFTER OBSERVATION — SIF NLP Engine & Causal Dissection
+* **Hybrid NLP Precursor Classifier**: Calibrated energy matrix (DeepSeek-R1 / RoBERTa) extracting potential severity regardless of zero actual harm.
+* **What-If Counterfactual Sandbox**: Simulates alternative causal branches ("What if secondary barrier broke? What if worker was in the snap-back zone?").
+* **3D Causal Failure Chain**: Interactive 3D visualization showing exact points of barrier failure leading to potential catastrophe.
 
-* **False Negative Cost**: Catastrophic (failing to flag a fatal suspended load drop precursor).
-* **False Positive Cost**: Low (generating a 2-minute review for a qualified HSSE officer).
+### Stage 4: ACROSS TIME — Converging Precursor Weak-Signal Radar
+* **Weak Signal Aggregator**: Correlates independent sub-threshold anomalies across shifts (e.g. cellar bubbling + choke manifold hiss + sensor drift) to detect impending well control escalations.
+* **Escalation Multiplier**: Quantifies cumulative risk escalation factors over 6-month horizons.
 
-### Model Benchmark Evaluation (Held-Out Test Set, n=700):
+### Stage 5: ACROSS SITES — 3D Safety Knowledge Graph
+* **Interactive 3D Graph Canvas**: Connects Sites &rarr; Activities &rarr; Hazards &rarr; Barriers &rarr; Consequences &rarr; Rules.
+* **Cross-Site Recurrent Pattern Recognition**: Identifies systemic vulnerabilities repeating across Assam (Digboi, Duliajan, Moran) and Rajasthan assets.
 
-| Model Architecture | Paradigm | Precision | Recall (Safety Target) | F1-Score | Accuracy | ROC-AUC |
-| :--- | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Keyword Rules Baseline** | Heuristic Rules | 98.5% | 39.5% | 0.564 | 77.1% | 0.690 |
-| **TF-IDF + Logistic Regression** | Supervised ML | 97.8% | 98.1% | 0.979 | 98.4% | 0.995 |
-| **TF-IDF + Linear SVM** | Supervised ML | 98.5% | 98.1% | 0.983 | 98.7% | 0.996 |
-| **Proposed Hybrid (NLP + Rules + XAI)** | Domain-Grounded Hybrid | **98.9%** | **99.6%** | **0.992** | **99.4%** | **0.998** |
+### Stage 6: HSE ACTION — Prioritized Interventions & Contractor Scorecards
+* **AI Prioritized Intervention Queue**: Algorithmic ranking prioritizing asset inspections for HSE Directors.
+* **Contractor Safety Scorecards**: Objective risk rating, repeat violation tracking, and Golden Rule compliance indexes.
 
----
-
-## 4. Key Application Pages & Features
-
-1. **Pipeline & Research Overview**:
-   * Interactive 8-step pipeline visualizer with input/process/output inspection.
-   * Conceptual contrast between traditional lagging severity and SIF precursor analytics.
-2. **AI/NLP Analysis Engine**:
-   * Single report analysis text area with **15 curated benchmark scenarios** (Drilling blowout, Crane drop, H2S confined space, LOTO electrical, Minor housekeeping).
-   * CSV / Excel batch upload interface.
-   * **SIF Classification Status**: Large badge (`HIGH` / `MEDIUM` / `LOW`), calibrated confidence %, actual vs potential consequence, risk zone.
-   * **Explainable AI (XAI)**: Color-coded token highlight spans (High-Energy Hazard, Exposure, Barrier Failure, Unsafe Dynamic Event, Consequence Disparity).
-   * **IOGP Life-Saving Rule Mapping**: Primary rule card with diagnostic lineage flowchart.
-   * **Safety Barrier Table**: Status (`FAILED`, `AT RISK`, `EFFECTIVE`) with exact narrative evidence quotes.
-3. **Safety Analytics Dashboard**:
-   * 7 dynamic KPI cards calculated from dataset.
-   * Visualizations: SIF Donut breakdown, Breached IOGP Rules, Barrier Failure distributions, and Operational Activity vs SIF Risk Matrix.
-   * **SIF Precursor Hotspots**: Normalized density table:
-     SIF Precursor Density = (SIF Reports / Total Reports) * 100
-     Includes scientific sample size caveats to prevent bias from reporting volumes.
-4. **Dataset Explorer**:
-   * Searchable, filterable repository of 2,800+ realistic synthetic OIL-calibrated records.
-   * Multi-facet filters, pagination, CSV download, and record detail inspector.
-5. **Research & Evaluation**:
-   * Research hypothesis, 6 research questions, dynamic model benchmark metrics, on-premise deployment architecture, limitations, and 7-phase roadmap.
-6. **Executive Briefing Generator**:
-   * One-click printable briefing summarizing top precursor risks, barrier failures, and strategic recommendations for OIL leadership.
+### Stage 7: LEARNING — Institutional Safety Memory & Root-Cause AI
+* **Historical Precedent Retrieval**: Instant semantic matching with past near-misses and learnings.
+* **AI Root-Cause Interrogation Assistant**: Contextual questions guiding safety investigators to uncover organizational latent failures.
 
 ---
 
-## 5. Quickstart & Installation
+## 3. Executive 3D Classic Aesthetic
+The platform utilizes an executive, minimal color palette engineered for high-level operations review:
+* **Background**: Clean Ivory / Alabaster (`#FAFAF9`)
+* **Primary Contrast**: Carbon Black (`#0A0B0D`)
+* **Accent / SIF Identity**: Deep Imperial Burgundy & Wine (`#5B1527`, `#781D35`)
+* **Tertiary Focus**: Warm Industrial Bronze (`#785A44`)
+* **Interactive 3D Effects**: Mouse-hover perspective tilt cards (`Card3D`), interactive 3D causal chain, and responsive HTML5 canvas knowledge graph.
 
-### Option A: Local Full-Stack Run (FastAPI + Embedded UI)
+---
+
+## 4. How to Run Locally
+
+The repository comes pre-bundled with production-compiled frontend assets in `frontend/dist/`. Running the Python backend serves both the complete 14-endpoint API and the interactive web application!
+
+### Prerequisites
+* Python 3.10, 3.11, or 3.12 installed.
+
+### Option 1: One-Click Windows Startup (Easiest)
+Simply double-click the included batch script in the root directory:
+```bash
+start.bat
+```
+This automatically verifies dependencies and launches the unified server at `http://localhost:8000`.
+
+### Option 2: Command Line (Cross-Platform)
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/avinab28/oil-sif-predict.git
@@ -142,55 +124,129 @@ Recall = True Positives / (True Positives + False Negatives)
    pip install -r backend/requirements.txt
    ```
 
-3. **Generate synthetic dataset and train models**:
+3. **Launch the platform**:
    ```bash
-   python backend/data/generator.py
+   python run.py
    ```
-
-4. **Launch the server**:
+   *or:*
    ```bash
    python backend/main.py
    ```
-   Open your browser to: **`http://localhost:8000`**  
-   *FastAPI automatically serves both the complete REST API (`/api/...`) and the interactive light-themed React frontend.*
 
----
+4. **Access the application**:
+   Open your browser to: **`http://localhost:8000`**
 
-### Option B: Frontend Live Development
+### Option 3: Frontend Development (Live Hot-Reload)
+If you want to edit TypeScript or Tailwind components with live hot-reloading:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Runs Vite hot-reloading development server on **`http://localhost:5173`**.
+Open **`http://localhost:5173`**.
 
 ---
 
-### Option C: Docker Deployment
+## 5. How to Deploy Online for Free
+
+### Method A: Hugging Face Spaces (100% Free, Zero Card Required)
+Hugging Face Spaces offers completely free CPU hosting for Python applications:
+1. Create a free account at [huggingface.co](https://huggingface.co).
+2. Click **New Space** &rarr; Select SDK: **Docker** or **Gradio/Streamlit**.
+3. Choose **Docker Blank** &rarr; Connect your GitHub repository `avinab28/oil-sif-predict`.
+4. Hugging Face automatically detects the included `Dockerfile` and builds the unified FastAPI + React app.
+5. Your application is live at `https://huggingface.co/spaces/<username>/oil-sif-predict`!
+
+### Method B: Render.com (Free Web Service)
+1. Sign up on [render.com](https://render.com) using your GitHub account (avoids card prompt when selecting the Free Tier).
+2. Click **New +** &rarr; **Web Service** &rarr; Select your repository.
+3. Configure settings:
+   - **Environment**: Python 3
+   - **Build Command**: `pip install -r backend/requirements.txt`
+   - **Start Command**: `python run.py`
+   - **Plan**: Free ($0/month)
+4. Click **Deploy Web Service**.
+
+### Method C: Vercel (Frontend) + Free Backend (Railway / Koyeb)
+* Deploy the `frontend/` folder directly to [Vercel](https://vercel.com) by setting Root Directory to `frontend`.
+* Point `API_BASE` in `frontend/src/services/api.ts` to your free deployed backend endpoint.
+
+### Method D: Docker Container
 ```bash
 docker-compose up --build
 ```
-Access the application on port `8000`.
+Access on port `8000`.
 
 ---
 
-## 6. On-Premise & Edge Security Architecture
+## 6. Project Directory Structure
 
-OIL safety narratives frequently reference sensitive operational assets and well locations. The platform is architected for strict intranet deployment:
-* **Zero External Cloud Leakage**: Runs 100% locally with Scikit-learn and local transformer pipelines.
-* **No Third-Party API Keys**: Operates completely offline without OpenAI, Anthropic, or external dependencies.
-* **Tamper-Evident Audit Trails**: Structured JSON outputs for HSE statutory compliance.
+```
+oil-sif-predict/
+├── run.py                          # 1-click cross-platform server launcher
+├── start.bat                       # 1-click Windows batch launcher
+├── Dockerfile                      # Cloud container deployment manifest
+├── docker-compose.yml              # Local container orchestration
+├── backend/
+│   ├── main.py                     # FastAPI application (14 REST endpoints + SPA static mount)
+│   ├── requirements.txt            # Python dependencies (FastAPI, uvicorn, scikit-learn, etc.)
+│   ├── api/
+│   │   ├── ptw_simops.py           # Stage 1: PTW Compliance & SIMOPS Collision APIs
+│   │   ├── voice_multimodal.py     # Stage 2: Multilingual Voice & CCTV Vision APIs
+│   │   ├── converging_escalation.py# Stage 4: Weak-Signal Radar & Escalation APIs
+│   │   ├── knowledge_graph.py      # Stage 5: 3D Knowledge Graph & Cross-Site Pattern APIs
+│   │   └── contractor_memory.py    # Stage 6 & 7: Contractor Scorecards & Safety Memory APIs
+│   ├── rules/
+│   │   ├── counterfactual.py       # Stage 3: What-If Counterfactual Simulation Engine
+│   │   ├── energy_matrix.py        # High-energy hazard boundary thresholds
+│   │   ├── life_saving_rules.py    # IOGP 9 Life-Saving Rules mapping
+│   │   └── barrier_taxonomy.py     # Bow-Tie prevention & mitigation barrier taxonomy
+│   └── models/
+│       ├── sif_classifier.py       # Dual-branch calibrated SIF NLP model
+│       └── rule_matcher.py         # Deterministic domain rule validation
+└── frontend/
+    ├── dist/                       # Pre-compiled production React/Vite assets
+    ├── package.json
+    ├── tailwind.config.js          # Classic Ivory/Burgundy/Carbon theme tokens
+    └── src/
+        ├── App.tsx                 # Root application router across all 7 stages
+        ├── components/
+        │   ├── Card3D.tsx          # Interactive 3D mouse hover perspective tilt wrapper
+        │   ├── CausalChain3D.tsx   # 3D interactive safety causal chain
+        │   ├── KnowledgeGraph3D.tsx# HTML5 Canvas 3D knowledge graph
+        │   ├── VoiceLogger.tsx     # Vernacular voice simulator with waveform bars
+        │   ├── SIMOPSMatrix.tsx    # Spatial proximity radar & collision matrix
+        │   ├── ConvergingRadar.tsx # Multi-signal weak precursor aggregator
+        │   ├── ContractorScorecard.tsx # Contractor safety performance profiles
+        │   ├── WhatIfSimulator.tsx # Counterfactual scenario toggler
+        │   ├── CCTVCorrelator.tsx  # Vision AI vs PTW permit validator
+        │   └── Navbar.tsx          # Executive classic Burgundy top navigation
+        └── pages/
+            ├── LifecyclePage.tsx   # 7-Stage End-to-End Safety Overview
+            ├── PTWPage.tsx         # Stage 1: PTW & SIMOPS
+            ├── VoiceVisionPage.tsx # Stage 2: Voice & Vision
+            ├── EnginePage.tsx      # Stage 3: SIF Engine & What-If Sandbox
+            ├── ConvergingPage.tsx  # Stage 4: Weak-Signal Radar
+            ├── KnowledgeGraphPage.tsx # Stage 5: Knowledge Graph
+            └── ContractorPage.tsx  # Stage 6: HSE Action & Contractors
+```
 
 ---
 
-## 7. Research Limitations & Governance
+## 7. SIH Problem Statement Alignment
 
-1. **Synthetic Data Calibration**: Developed and calibrated against realistic synthetic oilfield scenarios. Does not claim access to proprietary internal OIL HSSE records.
-2. **Human-in-the-Loop Validation**: AI predictions serve as leading decision support for qualified safety officers; not a replacement for statutory HSE procedures.
-3. **Multilingual Expansion**: Future phases will incorporate domain-adapted transformer fine-tuning for Assamese and Hindi oilfield terminology.
+| SIH Evaluation Criteria | OIL SIF-PREDICT Implementation |
+|:---|:---|
+| **Leading vs Lagging Indicator** | Evaluates potential severity independent of zero injury outcome. |
+| **Real-Time Operational Interventions** | Smart PTW compliance audit + spatial SIMOPS clash prevention before work starts. |
+| **Frontline Usability** | Hinglish, Hindi, and Assamese voice reporting reduces barrier for field crews. |
+| **Systemic Risk Discovery** | 3D Safety Knowledge Graph uncovers cross-site recurrent patterns across Assam fields. |
+| **Weak-Signal Convergence** | Temporal radar detects cumulative sub-threshold anomalies before blowouts occur. |
+| **Enterprise Governance** | AI Prioritized Intervention queue & contractor safety risk scorecards for HSE leaders. |
 
 ---
 
-## 8. License
+## 8. License & Acknowledgments
 
-This project is licensed under the MIT License — see the LICENSE file for details.
+This research prototype is developed for educational and research evaluation under the Smart India Hackathon.  
+Distributed under the MIT License.

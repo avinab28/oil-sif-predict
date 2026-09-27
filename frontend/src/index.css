@@ -4,25 +4,45 @@
 
 @layer base {
   body {
+    background-color: #FAFAF9;
+    color: #15171B;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  }
-  code, pre {
-    font-family: 'JetBrains Mono', monospace;
   }
 }
 
-/* Custom scrollbar for classy industrial look */
+/* 3D Perspective Styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Smooth ambient pulse */
+@keyframes winePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(120, 29, 53, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(120, 29, 53, 0); }
+}
+
+.wine-ping {
+  animation: winePulse 2.5s infinite;
+}
+
+/* Custom luxury scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F4F4F0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #C4C4BC;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #781D35;
 }

@@ -30,6 +30,14 @@ from backend.evaluation.benchmark import run_evaluation_benchmark
 from backend.rules.iogp_rules import IOGP_RULES
 from backend.core.config import PROJECT_NAME, VERSION, DESCRIPTION, RESEARCH_DISCLAIMER, SYNTHETIC_DATA_PATH
 
+
+from backend.api.ptw_simops import audit_ptw_compliance, check_simops_collision, PTWAuditRequest, SIMOPSCheckRequest
+from backend.api.voice_multimodal import parse_voice_to_structured_safety, generate_ai_followup_questions, correlate_multimodal_vision, VoiceTranscriptRequest
+from backend.api.converging_escalation import get_converging_precursors, get_sif_escalation_trends, get_ai_priority_queue
+from backend.api.knowledge_graph import get_safety_knowledge_graph, get_cross_site_patterns
+from backend.api.contractor_memory import get_contractor_scorecards, get_similar_historical_cases, generate_investigation_assistant_questions
+from backend.rules.counterfactual import simulate_what_if_counterfactual, CounterfactualRequest
+
 app = FastAPI(
     title=PROJECT_NAME,
     version=VERSION,
@@ -359,6 +367,71 @@ def get_demo_samples():
             "narrative": "A pile of discarded wooden packaging pallets was left stacked unevenly near the warehouse gate at Shalmari Gathering Station. Warehouse supervisor arranged re-stacking on ground level. Area clear of hazards."
         }
     ]
+
+
+# ==================== ADVANCED SAFETY LIFECYCLE ENDPOINTS ====================
+
+@app.post("/api/ptw/audit")
+def endpoint_ptw_audit(req: PTWAuditRequest):
+    return audit_ptw_compliance(req)
+
+@app.post("/api/ptw/simops-check")
+def endpoint_simops_check(req: SIMOPSCheckRequest):
+    return check_simops_collision(req)
+
+@app.post("/api/voice/process")
+def endpoint_voice_process(req: VoiceTranscriptRequest):
+    return parse_voice_to_structured_safety(req)
+
+@app.post("/api/voice/followup-questions")
+def endpoint_followup_questions(payload: dict):
+    narrative = payload.get("narrative", "")
+    return generate_ai_followup_questions(narrative)
+
+@app.post("/api/vision/correlate")
+def endpoint_vision_correlate(payload: dict):
+    narrative = payload.get("narrative", "")
+    meta = payload.get("metadata", {})
+    return correlate_multimodal_vision(narrative, meta)
+
+@app.get("/api/converging/active")
+def endpoint_converging_active():
+    return get_converging_precursors()
+
+@app.get("/api/escalation/trends")
+def endpoint_escalation_trends():
+    return get_sif_escalation_trends()
+
+@app.get("/api/priority-queue")
+def endpoint_priority_queue():
+    return get_ai_priority_queue()
+
+@app.get("/api/knowledge-graph")
+def endpoint_knowledge_graph():
+    return get_safety_knowledge_graph()
+
+@app.get("/api/cross-site/patterns")
+def endpoint_cross_site_patterns():
+    return get_cross_site_patterns()
+
+@app.get("/api/contractor/scorecards")
+def endpoint_contractor_scorecards():
+    return get_contractor_scorecards()
+
+@app.get("/api/historical/similar")
+def endpoint_historical_similar(hazard: str = "Suspended Load"):
+    return get_similar_historical_cases(hazard)
+
+@app.post("/api/investigation/questions")
+def endpoint_investigation_questions(payload: dict):
+    narrative = payload.get("narrative", "")
+    return generate_investigation_assistant_questions(narrative)
+
+@app.post("/api/counterfactual/simulate")
+def endpoint_counterfactual_simulate(req: CounterfactualRequest):
+    return simulate_what_if_counterfactual(req)
+
+# ==============================================================================
 
 # Serve static frontend build if present
 frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")

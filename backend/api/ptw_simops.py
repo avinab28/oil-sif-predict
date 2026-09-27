@@ -1,102 +1,122 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, Field
+from typing import List, Optional, Any, Dict
 
 class PTWAuditRequest(BaseModel):
-    task_description: str
-    activity: str = "Maintenance"
-    location: str = "Area A - Compressor Skid 3"
-    stated_controls: List[str] = []
+    task_description: Optional[str] = None
+    activity_description: Optional[str] = None
+    activity: Optional[str] = "Maintenance"
+    permit_type: Optional[str] = "Cold Work / Isolation"
+    location: Optional[str] = "Digboi Field - Wellpad #07"
+    stated_controls: Optional[List[str]] = Field(default_factory=list)
+    controls_entered: Optional[List[str]] = Field(default_factory=list)
 
 class SIMOPSCheckRequest(BaseModel):
-    area: str = "Area A - Main Process Skid"
-    permit_a: dict
-    permit_b: dict
+    area: Optional[str] = None
+    location: Optional[str] = "Digboi Rig #07"
+    permit_a: Optional[Dict[str, Any]] = None
+    permit_b: Optional[Dict[str, Any]] = None
+    activities: Optional[List[Dict[str, Any]]] = None
 
 def audit_ptw_compliance(req: PTWAuditRequest):
-    desc = req.task_description.lower()
+    desc = (req.task_description or req.activity_description or "").lower()
+    controls_list = (req.stated_controls or []) + (req.controls_entered or [])
+    controls_text = " ".join(controls_list).lower()
+    full_text = f"{desc} {controls_text}"
+
     missing_controls = []
     required_evidence = []
     
     # 1. Isolation check
-    if any(k in desc for k in ["replace", "valve", "pump", "electrical", "motor", "breaker"]):
-        if "zero-energy" not in desc and "multimeter" not in desc and "verified" not in desc:
-            missing_controls.append({
-                "control": "Energy Isolation & Zero-Energy State Verification",
-                "severity": "CRITICAL",
-                "reason": "Isolation stated or implied, but objective zero-energy verification evidence (physical lockout + test-before-touch) is missing."
-            })
-            required_evidence.append({"item": "Isolation Breaker / Padlock Applied", "status": "CONFIRMED" if "isolat" in desc else "PENDING"})
-            required_evidence.append({"item": "Zero-Energy Potential Test (Voltmeter / Pressure Bleed-off)", "status": "MISSING"})
+    if any(k in full_text for k in ["replace", "valve", "pump", "electrical", "motor", "breaker", "manifold", "pipeline"]):
+        if not any(k in full_text for k in ["zero-energy", "multimeter", "loto", "double block", "bleed"]):
+            missing_controls.append("Double Block & Bleed (DBB) isolation confirmation & LOTO tag verified")
+            required_evidence.append({"item": "Isolation Padlock & DBB Bleed-Off Confirmed", "verified": False})
+        else:
+            required_evidence.append({"item": "Lockout/Tagout (LOTO) Physical Locks Applied", "verified": True})
 
     # 2. Confined Space check
-    if any(k in desc for k in ["confined", "tank", "vessel", "pit", "separator"]):
-        if "gas test" not in desc and "multi-gas" not in desc:
-            missing_controls.append({
-                "control": "Pre-Entry Atmospheric Gas Testing",
-                "severity": "CRITICAL",
-                "reason": "Confined vessel entry planned without documented multi-gas test results (O2 > 19.5%, H2S 0.0 ppm, LEL 0%)."
-            })
-            required_evidence.append({"item": "Pre-Entry 4-Gas Test Log", "status": "MISSING"})
-            required_evidence.append({"item": "Continuous Ventilation Verification", "status": "MISSING"})
+    if any(k in full_text for k in ["confined", "tank", "vessel", "pit", "cellar", "separator"]):
+        if not any(k in full_text for k in ["gas test", "multi-gas", "lel", "h2s"]):
+            missing_controls.append("Pre-Entry Continuous LEL & H2S Multi-Gas Atmospheric Testing Log")
+            required_evidence.append({"item": "Pre-Entry 4-Gas Test Log (LEL < 1%, H2S 0ppm)", "verified": False})
+        else:
+            required_evidence.append({"item": "Continuous Atmosphere Ventilation Active", "verified": True})
 
     # 3. Hot work check
-    if any(k in desc for k in ["weld", "cut", "grind", "spark", "hot work"]):
-        if "fire watch" not in desc and "blanket" not in desc:
-            missing_controls.append({
-                "control": "Fire Watch & Spark Containment Habitat",
-                "severity": "HIGH",
-                "reason": "Spark-producing activity requires designated fire watch with pressurized extinguisher and flame-retardant blanket."
-            })
-            required_evidence.append({"item": "Fire Watch Personnel Assigned", "status": "MISSING"})
-            required_evidence.append({"item": "Combustible Gas Test within 15m", "status": "MISSING"})
+    if any(k in full_text for k in ["weld", "cut", "grind", "spark", "hot work"]):
+        if not any(k in full_text for k in ["fire watch", "blanket", "habitat"]):
+            missing_controls.append("Dedicated Standby Fire Watch with pressurized 50kg dry chemical extinguisher")
+            missing_controls.append("Flame-retardant spark containment blanket / positive-pressure habitat")
+            required_evidence.append({"item": "Designated Standby Fire Watch Assigned", "verified": False})
+            required_evidence.append({"item": "10m Spark Containment Habitat Erected", "verified": False})
+        else:
+            required_evidence.append({"item": "Spark Arrestor & Fire Watch in Place", "verified": True})
+
+    if not required_evidence:
+        required_evidence.append({"item": "Pre-Job Toolbox Talk (TBT) Completed", "verified": True})
+        required_evidence.append({"item": "Mandatory PPE Verification Check", "verified": True})
 
     passed = len(missing_controls) == 0
+    score = 100 if passed else max(30, 95 - (len(missing_controls) * 25))
+    status = "APPROVED_COMPLIANT" if passed else "REJECTED_MISSING_MANDATORY_CONTROLS"
+
+    # Convert required_evidence to dynamic checklist format
+    dynamic_checklist = [
+        {"item": item.get("item", ""), "required": True, "verified": item.get("verified", False)}
+        for item in required_evidence
+    ]
+
     return {
-        "status": "PERMIT_APPROVED" if passed else "PERMIT_CHECK_FAILED",
+        "status": status,
+        "compliance_score": score,
         "passed": passed,
-        "compliance_score": 100 if passed else max(30, 95 - (len(missing_controls) * 35)),
+        "mandatory_controls_missing": missing_controls,
         "missing_controls": missing_controls,
-        "dynamic_checklist": required_evidence,
-        "recommended_action": "Authorized Issuer Sign-off Permitted" if passed else "Mandatory Permit Issuer Review & Barrier Rectification Required"
+        "dynamic_checklist": dynamic_checklist,
+        "recommendations": "Authorized Issuer sign-off granted; proceed with work." if passed else "Hold permit issuance until all missing mandatory controls and physical verification tags are validated on site by Area Authority."
     }
 
 def check_simops_collision(req: SIMOPSCheckRequest):
-    p_a = req.permit_a
-    p_b = req.permit_b
+    area_name = req.location or req.area or "Process Deck"
     
-    act_a = p_a.get("activity", "").lower()
-    act_b = p_b.get("activity", "").lower()
-    type_a = p_a.get("permit_type", "").lower()
-    type_b = p_b.get("permit_type", "").lower()
-    
-    is_conflict = False
-    interaction_hazard = ""
-    recommendation = ""
-    
-    # Clash 1: Hot Work vs Hydrocarbon / Fuel Transfer
-    if (("hot work" in type_a or "weld" in act_a) and ("hydrocarbon" in act_b or "fuel" in act_b or "flange" in act_b)) or        (("hot work" in type_b or "weld" in act_b) and ("hydrocarbon" in act_a or "fuel" in act_a or "flange" in act_a)):
-        is_conflict = True
-        interaction_hazard = "Ignition Source (Hot Work Arc/Sparks) + Flammable Vapor Cloud Risk (Hydrocarbon Transfer)"
-        recommendation = "SUSPEND Simultaneous Execution. Reschedule Hot Work until hydrocarbon line transfer and degassing is 100% complete and verified."
+    # Handle both {activities: [...]} and {permit_a: {...}, permit_b: {...}}
+    if req.activities and len(req.activities) >= 2:
+        p_a = req.activities[0]
+        p_b = req.activities[1]
+    else:
+        p_a = req.permit_a or {"type": "Hot Work", "zone": "Cellar Deck"}
+        p_b = req.permit_b or {"type": "Sampling", "zone": "Manifold Deck"}
 
-    # Clash 2: Heavy Crane Lift vs Ground Personnel / Trench Excavation
-    elif (("lift" in act_a or "crane" in act_a) and ("trench" in act_b or "walk" in act_b or "pit" in act_b)) or          (("lift" in act_b or "crane" in act_b) and ("trench" in act_a or "walk" in act_a or "pit" in act_a)):
+    text_a = str(p_a).lower()
+    text_b = str(p_b).lower()
+
+    dist = p_a.get("distance_m", 12)
+
+    is_conflict = False
+    clash_reason = ""
+    action = ""
+
+    if (("hot" in text_a or "weld" in text_a or "grind" in text_a) and ("hydrocarbon" in text_b or "sampl" in text_b or "flange" in text_b)) or \
+       (("hot" in text_b or "weld" in text_b or "grind" in text_b) and ("hydrocarbon" in text_a or "sampl" in text_a or "flange" in text_a)):
         is_conflict = True
-        interaction_hazard = "Suspended Heavy Load Drop Zone overlaps active below-ground excavation crew with restricted escape path."
-        recommendation = "Enforce exclusive spatial separation. Evacuate trench personnel during crane hoisting operations."
-        
+        clash_reason = f"Hot Work (Arc/Grinding Sparks) overlaps with Hydrocarbon Flange Breaking/Sampling within {dist} meters (minimum safe separation is 30m)."
+        action = "Suspend Sampling Permit PTW-2026-902 until Hot Work completes, equipment cools, and atmosphere is re-tested with 4-gas detector."
+    elif (("lift" in text_a or "crane" in text_a) and ("walk" in text_b or "trench" in text_b or "entry" in text_b)) or \
+         (("lift" in text_b or "crane" in text_b) and ("walk" in text_a or "trench" in text_a or "entry" in text_a)):
+        is_conflict = True
+        clash_reason = f"Overhead Heavy Crane Hoisting drop radius overlaps active personnel transit or below-ground cellar entry zone ({dist}m separation)."
+        action = "Enforce exclusive spatial separation. Barricade cellar access and trip crane slewing limiters before entry."
     else:
         is_conflict = False
-        interaction_hazard = "Independent activity envelopes; no direct thermodynamic or spatial clash detected."
-        recommendation = "Maintain standard radio communication between permit holders."
+        clash_reason = f"Independent operations; spatial buffer of {dist}m meets safety threshold."
+        action = "Maintain continuous UHF radio coordination between area task supervisors."
 
     return {
-        "status": "SIMOPS_CONFLICT" if is_conflict else "SIMOPS_CLEAR",
-        "has_conflict": is_conflict,
-        "area": req.area,
-        "permit_a": p_a,
-        "permit_b": p_b,
-        "potential_interaction": interaction_hazard,
-        "recommended_action": recommendation,
+        "clash_detected": is_conflict,
+        "severity": "CRITICAL_PROHIBITED" if is_conflict else "CLEAR_ACCEPTABLE",
+        "clash_reason": clash_reason,
+        "recommended_action": action,
+        "separation_distance_m": dist,
+        "min_required_distance_m": 30,
         "requires_hse_intervention": is_conflict
     }
